@@ -26,14 +26,13 @@ class mainFrame(wx.Frame):
         randomButton = wx.Button(btnPanel,label='Random')
         saveButton = wx.Button(btnPanel,label='Save')
         generateButton = wx.Button(btnPanel,label='Generate')
-        tempColor = ColorPanel(btnPanel)
+        tempColor = ColorPanel(btnPanel,-1,255,0,0)
 
         btnBox=wx.BoxSizer(wx.HORIZONTAL)
         btnBox.Add(randomButton,proportion=1,flag=wx.LEFT,border=5)
         btnBox.Add(saveButton,proportion=0,flag=wx.LEFT,border=5)
         btnBox.Add(generateButton,proportion=0,flag=wx.LEFT,border=5)
         btnBox.Add(tempColor,proportion=0,flag=wx.LEFT,border=5)
-        tempColor.setColor(0,0,255)
         btnPanel.SetSizer(btnBox)
 
         rightBox.Add(posText,proportion=0,flag=wx.EXPAND |wx.ALL,border=15)
@@ -47,12 +46,13 @@ class mainFrame(wx.Frame):
 
         mainPanel.SetSizer(mainBox)
 class ColorPanel(wx.Panel):
-    def __init__(self, parent, id=-1 ):
+    def __init__(self, parent, id=-1 ,red=3,green=255,blue=255):
         self.colorSize = 10
         wx.Panel.__init__(self, parent, id)
         destroyBtn = wx.Button(self,label='Destroy')
         
         self.emptyImage = wx.EmptyImage(self.colorSize, self.colorSize)
+        self.setColor(red,green,blue)
         self.tempImage = self.emptyImage.ConvertToBitmap()
         self.staticBmp = wx.StaticBitmap(self, -1, self.tempImage, (0, 0), (self.colorSize, self.colorSize))
         
@@ -60,12 +60,12 @@ class ColorPanel(wx.Panel):
         self.boxsize.Add(self.staticBmp,proportion=0,flag=wx.EXPAND |wx.ALL,border=1)
         self.boxsize.Add(destroyBtn,proportion=1,flag=wx.LEFT,border=5)
         self.SetSizer(self.boxsize)
+        
     def setColor( self, red, green, blue ):
         for colorx in xrange(self.colorSize):
             for colory in xrange(self.colorSize):
                 self.emptyImage.SetRGB(colorx, colory, red, green, blue)
-        tempImage = self.emptyImage.ConvertToBitmap()
-        self.staticBmp = wx.StaticBitmap(self, -1, tempImage, (0, 0), (self.colorSize, self.colorSize))
+                
 if __name__ == '__main__':
     app = wx.PySimpleApp()
     frame = mainFrame()
