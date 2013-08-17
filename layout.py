@@ -2,6 +2,7 @@
 import  wx
 import  wx.lib.scrolledpanel as scrolled
 
+
 #----------------------------------------------------------------------
 
 text = "one two buckle my shoe three four shut the door five six pick up sticks seven eight lay them straight nine ten big fat hen"
@@ -14,7 +15,7 @@ class TestPanel(scrolled.ScrolledPanel):
 
         words = text.split()
 
-        panel1 = scrolled.ScrolledPanel(self, -1, size=(150, 300),
+        panel1 = scrolled.ScrolledPanel(self, -1, size=(300, 300),
                                  style = wx.TAB_TRAVERSAL|wx.SUNKEN_BORDER, name="panel1" )
         fgs1 = wx.FlexGridSizer(cols=3, vgap=4, hgap=10)
 
@@ -39,6 +40,13 @@ class TestPanel(scrolled.ScrolledPanel):
         panel1.SetSizer( fgs1 )
         panel1.SetAutoLayout(1)
         panel1.SetupScrolling()
+        
+        panel1.Bind(wx.EVT_MOTION,  self.OnMove)
+        wx.StaticText(panel1, -1, "Pos:", pos=(10, 12))
+        self.posCtrl = wx.TextCtrl(panel1, -1, "", pos=(140, 10))
+    def OnMove(self, event):
+        pos = event.GetPosition()
+        self.posCtrl.SetValue("%s, %s" % (pos.x, pos.y))
 
 
 #----------------------------------------------------------------------
