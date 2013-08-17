@@ -1,4 +1,5 @@
 import wx
+import  wx.lib.scrolledpanel as scrolled
 class mainFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None,title="simple",size=(500,335))
@@ -26,18 +27,29 @@ class mainFrame(wx.Frame):
         randomButton = wx.Button(btnPanel,label='Random')
         saveButton = wx.Button(btnPanel,label='Save')
         generateButton = wx.Button(btnPanel,label='Generate')
-        tempColor = ColorPanel(btnPanel,-1,255,0,0)
 
         btnBox=wx.BoxSizer(wx.HORIZONTAL)
         btnBox.Add(randomButton,proportion=1,flag=wx.LEFT,border=5)
         btnBox.Add(saveButton,proportion=0,flag=wx.LEFT,border=5)
         btnBox.Add(generateButton,proportion=0,flag=wx.LEFT,border=5)
-        btnBox.Add(tempColor,proportion=0,flag=wx.LEFT,border=5)
         btnPanel.SetSizer(btnBox)
+        
+        scrollPanel = scrolled.ScrolledPanel(rightPanel, -1, size=(100, 200),
+                                 style = wx.TAB_TRAVERSAL|wx.SUNKEN_BORDER, name="panel1" )
+        fgs1 = wx.FlexGridSizer(cols=1, vgap=4, hgap=10)
+        for indexColor in xrange(5):
+            colorPanel = ColorPanel(scrollPanel,255,255,255)
+            fgs1.Add(colorPanel, flag=wx.CENTER, border=10)
+
+        scrollPanel.SetSizer( fgs1 )
+        scrollPanel.SetAutoLayout(1)
+        scrollPanel.SetupScrolling()
 
         rightBox.Add(posText,proportion=0,flag=wx.EXPAND |wx.ALL,border=15)
+        rightBox.Add(scrollPanel,proportion=1,flag=wx.EXPAND | wx.LEFT | wx.BOTTOM | wx.RIGHT, border=5)
         rightBox.Add(btnPanel,proportion=1,flag=wx.EXPAND | wx.LEFT | wx.BOTTOM | wx.RIGHT, border=5)
-
+        
+        
         mainBox = wx.BoxSizer(wx.HORIZONTAL)
         mainBox.Add(leftPanel,proportion=0,flag=wx.EXPAND |wx.ALL,border=55)
         mainBox.Add(rightPanel,proportion=1,flag=wx.LEFT,border=5)
