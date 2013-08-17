@@ -1,5 +1,4 @@
-=Heading1=
-使用notepad++作为编辑器。
+#使用notepad++作为编辑器。#
 
 =Heading1=
 使用f5 + cmd /c "python所在路径"\python.exe "$(FULL_CURRENT_PATH)" & PAUSE方式启动py脚本
@@ -9,4 +8,3 @@
 
 =Heading1=
 测试了一个捕获鼠标的例子
-
