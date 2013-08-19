@@ -2,7 +2,7 @@
 import  wx
 import random
 from Main import opj
-
+import randomColor as rcolor
 
 #----------------------------------------------------------------------
 class TestPanel(wx.Panel):
@@ -32,8 +32,9 @@ class TestPanel(wx.Panel):
         defaultRed1      = 183;
         defaultGreen2      = 171;
         defaultBlue3      = 173;
-        randomRed,randomGreen,randomBlue               = self.randomColor()
-        randomRed1,randomGreen1,randomBlue1           = self.randomColor()
+        rcr = rcolor.randomColor()
+        randomRed,randomGreen,randomBlue               = rcr.getRandomColor()
+        randomRed1,randomGreen1,randomBlue1           = rcr.getRandomColor()
         indexColor          = 0;
         for x in xrange(png.GetWidth()):
             for y in xrange(png.GetHeight()):
@@ -48,13 +49,6 @@ class TestPanel(wx.Panel):
         pos = pos + png.GetHeight() + 10
         self.tempImage = emptyImage.ConvertToBitmap()
         wx.StaticBitmap(self, -1, self.tempImage, (10, pos), (self.tempImage.GetWidth(), self.tempImage.GetHeight()))
-        v1,v2,v3 = 1,2,3
-
-    def randomColor( self ):
-         v1 = random.randint(0,255)
-         v2 = random.randint(0,255)
-         v3 = random.randint(0,255)
-         return v1,v2,v3
     def saveFile( self, saveImage ):
         if saveImage != None:
              saveImage.SaveFile('bitmaps/save.png', wx.BITMAP_TYPE_PNG)
