@@ -2,6 +2,7 @@ import wx
 import wx.lib.scrolledpanel as scrolled
 import colorpanel as colp
 import colorData as colda
+import randomColor
 from Main import opj
 class mainFrame(wx.Frame):
     def __init__(self):
@@ -34,6 +35,7 @@ class mainFrame(wx.Frame):
         generateButton = wx.Button(btnPanel,label='Generate')
         
         self.Bind(wx.EVT_BUTTON, self.OnButtonRandom, randomButton)
+        self.Bind(wx.EVT_BUTTON, self.onGenerateImage, generateButton)
 
         btnBox=wx.BoxSizer(wx.HORIZONTAL)
         btnBox.Add(randomButton,proportion=1,flag=wx.LEFT,border=5)
@@ -48,8 +50,7 @@ class mainFrame(wx.Frame):
         rightBox.Add(posText,proportion=0,flag=wx.EXPAND |wx.ALL,border=15)
         rightBox.Add(self.scrollPanel,proportion=1,flag=wx.EXPAND | wx.LEFT | wx.BOTTOM | wx.RIGHT, border=5)
         rightBox.Add(btnPanel,proportion=1,flag=wx.EXPAND | wx.LEFT | wx.BOTTOM | wx.RIGHT, border=5)
-        
-        
+
         mainBox = wx.BoxSizer(wx.HORIZONTAL)
         mainBox.Add(leftPanel,proportion=0,flag=wx.EXPAND |wx.ALL,border=100)
         mainBox.Add(rightPanel,proportion=1,flag=wx.LEFT,border=5)
@@ -57,33 +58,68 @@ class mainFrame(wx.Frame):
         rightPanel.SetSizer(rightBox)
 
         mainPanel.SetSizer(mainBox)
+
     def isColorExist( self, cdata ):
         for data in self.colorLst: 
             if data.isSameColor(cdata) == True:
                 return True
         return False
+
     def OnButtonRandom(self, evt):
         self.colorLst = []
-        png = wx.Image(opj('testimage.png'), wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        self.panelLst = []
+        self.png = wx.Image(opj('testimage.png'), wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         pos = 10
-        wx.StaticBitmap(self, -1, png, (10, pos), (png.GetWidth(), png.GetHeight()))    
+        wx.StaticBitmap(self, -1, self.png, (10, pos), (self.png.GetWidth(), self.png.GetHeight()))    
+        self.fgs1.Clear(True)
+        self.dstImage = wx.ImageFromBitmap( self.png )
         
-        dstImage = wx.ImageFromBitmap( png )
-        
-        for x in xrange(png.GetWidth()):
-            for y in xrange(png.GetHeight()):
-                redColor = dstImage.GetRed(x,y)
-                greenColor = dstImage.GetGreen(x,y)
-                blueColor = dstImage.GetBlue(x,y)
+        for x in xrange(self.png.GetWidth()):
+            for y in xrange(self.png.GetHeight()):
+                redColor = self.dstImage.GetRed(x,y)
+                greenColor = self.dstImage.GetGreen(x,y)
+                blueColor = self.dstImage.GetBlue(x,y)
                 tempColor = colda.colorData(redColor,greenColor,blueColor)
                 if self.isColorExist( tempColor ) == False:
                     self.colorLst.append( tempColor )
                     colorPanel = colp.ColorPanel(self.scrollPanel,-1,tempColor)
                     self.fgs1.Add(colorPanel, flag=wx.CENTER, border=10)
-
+                    self.panelLst.append(colorPanel)
+          
         self.scrollPanel.SetSizer( self.fgs1 )
         self.scrollPanel.SetAutoLayout(1)
-        self.scrollPanel.SetupScrolling()        
+        self.scrollPanel.SetupScrolling()
+        #cr = self.panelLst[0]
+        #print(cr.isChecked())
+    def onGenerateImage( self,evt ):
+        self.processImage( self.png )
+    def processImage( self, png ):
+        emptyImage = wx.EmptyImage(png.GetWidth(), png.GetHeight())
+        colorGenerate = randomColor.randomColor()
+        randomColorLst = []
+        for colorItem in self.colorLst:
+            randomColorLst.append(colda.colorData(colorGenerate.getRandomColor()))
+            
+        for x in xrange(png.GetWidth()):
+            for y in xrange(png.GetHeight()):
+                    tempColorData = colda.colorData(self.dstImage.GetRed(x,y),self.dstImage.GetGreen(x,y),self.dstImage.GetBlue(x,y))
+                    indexColor = 0
+                    for dataColor in self.colorLst:
+                        if dataColor.isSameColor(tempColorData) == True:
+                            tempRandomColorData = randomColorLst[indexColor]
+                            c1,c2,c3 = tempRandomColorData.getColor()
+                            print(c1)
+                            print(c2)
+                            print(c3)
+                            emptyImage.SetRGB(x, y, c1, c2, c3)
+                            break;
+                        else:
+                            emptyImage.SetRGB(x, y, self.dstImage.GetRed(x,y), self.dstImage.GetGreen(x,y), self.dstImage.GetBlue(x,y))
+                        indexColor = indexColor + 1
+
+        pos = png.GetHeight() + 10
+        self.tempImage = emptyImage.ConvertToBitmap()
+        wx.StaticBitmap(self, -1, self.tempImage, (10, pos), (self.tempImage.GetWidth(), self.tempImage.GetHeight()))
 if __name__ == '__main__':
     app = wx.PySimpleApp()
     frame = mainFrame()

@@ -1,3 +1,4 @@
+import randomColor
 class colorData():
     def __init__( self,red = 0, green = 0, blue = 0 ):
         self.log = ""
@@ -14,7 +15,9 @@ class colorData():
         if colordata.red == self.red and colordata.green == self.green and colordata.blue == self.blue:
             return True
         return False
-        
+#rc = randomColor.randomColor()        
+#rdata = colorData(rc.getRandomColor())
+#print(rdata.getColor())
 """
 c1 = colorData()
 c1.setColor(1,1,1)

@@ -5,7 +5,8 @@ class ColorPanel(wx.Panel):
         self.colorWidth = 200
         self.colorHeight = 10
         wx.Panel.__init__(self, parent, id)
-        destroyBtn = wx.Button(self,label='Destroy')
+        #destroyBtn = wx.Button(self,label='Destroy')
+        self.checkBox = wx.CheckBox(self, -1, "Checked", (0, 0), (50, 20))
         
         self.emptyImage = wx.EmptyImage(self.colorWidth, self.colorHeight)
         self.crData = crData
@@ -16,11 +17,12 @@ class ColorPanel(wx.Panel):
         
         self.boxsize = wx.BoxSizer(wx.HORIZONTAL)
         self.boxsize.Add(self.staticBmp,proportion=0,flag=wx.EXPAND |wx.ALL,border=1)
-        self.boxsize.Add(destroyBtn,proportion=1,flag=wx.LEFT,border=5)
+        self.boxsize.Add(self.checkBox,proportion=1,flag=wx.LEFT,border=5)
         self.SetSizer(self.boxsize)
     def setColor( self, red, green, blue ):
         for colorx in xrange(self.colorWidth):
             for colory in xrange(self.colorHeight):
                 self.emptyImage.SetRGB(colorx, colory, red, green, blue)
-
+    def isChecked( self ):
+        return self.checkBox.IsChecked()
                 
