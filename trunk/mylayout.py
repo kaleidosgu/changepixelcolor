@@ -17,8 +17,8 @@ class mainFrame(wx.Frame):
         graphicPanel2 = wx.Panel( leftPanel )
 
         leftBox=wx.BoxSizer(wx.VERTICAL)
-        testCtrl = wx.StaticText(self.graphicPanel1,-1,"ffff")
-        testCtrl2 = wx.StaticText(graphicPanel2,-1,"fd")
+        #testCtrl = wx.StaticText(self.graphicPanel1,-1,"ffff")
+        #testCtrl2 = wx.StaticText(graphicPanel2,-1,"fd")
         
         leftBox.Add(self.graphicPanel1,proportion=1,flag=wx.EXPAND |wx.ALL,border=15)
         leftBox.Add(graphicPanel2,proportion=1,flag=wx.EXPAND | wx.LEFT | wx.BOTTOM | wx.RIGHT, border=5)
@@ -38,9 +38,9 @@ class mainFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.onGenerateImage, generateButton)
 
         btnBox=wx.BoxSizer(wx.HORIZONTAL)
+        btnBox.Add(generateButton,proportion=0,flag=wx.LEFT,border=5)
         btnBox.Add(randomButton,proportion=1,flag=wx.LEFT,border=5)
         btnBox.Add(saveButton,proportion=0,flag=wx.LEFT,border=5)
-        btnBox.Add(generateButton,proportion=0,flag=wx.LEFT,border=5)
         btnPanel.SetSizer(btnBox)
         
         self.scrollPanel = scrolled.ScrolledPanel(rightPanel, -1, size=(100, 200),
@@ -66,6 +66,8 @@ class mainFrame(wx.Frame):
         return False
 
     def OnButtonRandom(self, evt):
+        self.processImage( self.png )
+    def onGenerateImage( self,evt ):
         self.colorLst = []
         self.panelLst = []
         self.png = wx.Image(opj('testimage.png'), wx.BITMAP_TYPE_PNG).ConvertToBitmap()
@@ -89,8 +91,6 @@ class mainFrame(wx.Frame):
         self.scrollPanel.SetSizer( self.fgs1 )
         self.scrollPanel.SetAutoLayout(1)
         self.scrollPanel.SetupScrolling()
-    def onGenerateImage( self,evt ):
-        self.processImage( self.png )
     def processImage( self, png ):
         emptyImage = wx.EmptyImage(png.GetWidth(), png.GetHeight())
         colorGenerate = randomColor.randomColor()
