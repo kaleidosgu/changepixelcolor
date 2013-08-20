@@ -7,6 +7,7 @@ class ColorPanel(wx.Panel):
         wx.Panel.__init__(self, parent, id)
         #destroyBtn = wx.Button(self,label='Destroy')
         self.checkBox = wx.CheckBox(self, -1, "Checked", (0, 0), (50, 20))
+        self.checkBox.SetValue( True )
         
         self.emptyImage = wx.EmptyImage(self.colorWidth, self.colorHeight)
         self.crData = crData

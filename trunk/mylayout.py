@@ -89,8 +89,6 @@ class mainFrame(wx.Frame):
         self.scrollPanel.SetSizer( self.fgs1 )
         self.scrollPanel.SetAutoLayout(1)
         self.scrollPanel.SetupScrolling()
-        #cr = self.panelLst[0]
-        #print(cr.isChecked())
     def onGenerateImage( self,evt ):
         self.processImage( self.png )
     def processImage( self, png ):
@@ -98,25 +96,30 @@ class mainFrame(wx.Frame):
         colorGenerate = randomColor.randomColor()
         randomColorLst = []
         for colorItem in self.colorLst:
-            randomColorLst.append(colda.colorData(colorGenerate.getRandomColor()))
+            colorArray = colorGenerate.getRandomColor()
+            randomColorLst.append(colda.colorData(colorArray[0],colorArray[1],colorArray[2]))
             
         for x in xrange(png.GetWidth()):
             for y in xrange(png.GetHeight()):
-                    tempColorData = colda.colorData(self.dstImage.GetRed(x,y),self.dstImage.GetGreen(x,y),self.dstImage.GetBlue(x,y))
-                    indexColor = 0
-                    for dataColor in self.colorLst:
-                        if dataColor.isSameColor(tempColorData) == True:
-                            tempRandomColorData = randomColorLst[indexColor]
-                            c1,c2,c3 = tempRandomColorData.getColor()
-                            print(c1)
-                            print(c2)
-                            print(c3)
-                            emptyImage.SetRGB(x, y, c1, c2, c3)
-                            break;
-                        else:
-                            emptyImage.SetRGB(x, y, self.dstImage.GetRed(x,y), self.dstImage.GetGreen(x,y), self.dstImage.GetBlue(x,y))
-                        indexColor = indexColor + 1
-
+                tempColorData = colda.colorData(self.dstImage.GetRed(x,y),self.dstImage.GetGreen(x,y),self.dstImage.GetBlue(x,y))
+                indexColor = 0
+                findColor = False;
+                c1,c2,c3 = 0,0,0;
+                for dataColor in self.colorLst:
+                    if dataColor.isSameColor(tempColorData) == True:
+                        tempRandomColorData = randomColorLst[indexColor]
+                        c1,c2,c3 = tempRandomColorData.getColor()
+                        findColor = True
+                        break;
+                    indexColor = indexColor + 1
+                if findColor == True:
+                    panelInstance = self.panelLst[indexColor]
+                    if panelInstance.isChecked() == False :
+                        emptyImage.SetRGB(x, y, c1,c2,c3) 
+                    else:
+                        emptyImage.SetRGB(x, y, self.dstImage.GetRed(x,y), self.dstImage.GetGreen(x,y), self.dstImage.GetBlue(x,y)) 
+                else:
+                    emptyImage.SetRGB(x, y, self.dstImage.GetRed(x,y), self.dstImage.GetGreen(x,y), self.dstImage.GetBlue(x,y)) 
         pos = png.GetHeight() + 10
         self.tempImage = emptyImage.ConvertToBitmap()
         wx.StaticBitmap(self, -1, self.tempImage, (10, pos), (self.tempImage.GetWidth(), self.tempImage.GetHeight()))
